@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36915.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EProg", "EProg.vcxproj", "{D42E09FA-747A-465D-A31D-956678FAB04C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		DebUns|x64 = DebUns|x64
+		Release|x64 = Release|x64
+		RelUns|x64 = RelUns|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.Debug|x64.ActiveCfg = Debug|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.Debug|x64.Build.0 = Debug|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.DebUns|x64.ActiveCfg = DebUns|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.DebUns|x64.Build.0 = DebUns|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.Release|x64.ActiveCfg = Release|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.Release|x64.Build.0 = Release|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.RelUns|x64.ActiveCfg = RelUns|x64
+		{D42E09FA-747A-465D-A31D-956678FAB04C}.RelUns|x64.Build.0 = RelUns|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {771E9A41-C478-4A6B-9166-50660FFA97B3}
+	EndGlobalSection
+EndGlobal
