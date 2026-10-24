@@ -3,7 +3,7 @@ Source code of Img16DatSer (Headerless 16-bit Images DataSeries Viewer for Windo
 
 = License and statements:
   - License : LGPL
-  - This application incapsulates a trivia subset of functions in V i e w 1 6 (in commercial SDK V a t e c h R a y e n c e V a D a v).
+  - This application shares a trivia-subset of functionalities with V i e w 1 6 (in commercial SDK V a t e c h R a y e n c e V a D a v). This application is to debug/test these trivia-functionalities for mutual benefits (to be used further by the developer; including commercial apps)
   - This application excludes "non-trivia" functionalities (such as "differential view", "directional-blur").
   - Used sources are: 
     -- K&R C RTL, MFC VS 2008, Wikipedia;
