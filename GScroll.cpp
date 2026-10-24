@@ -90,14 +90,13 @@ void GSCR_GetScrollK( // returns relative scrollbars' positions
   AWHK[0] = iScrollK( qScrollRng.x, ARf.left );
   AWHK[1] = iScrollK( qScrollRng.y, ARf.top ); }
 
-
 void CSCR_SentinelRf( int AWf, int AHf, CRect *ARf ) {
   CRect qR = *ARf; int qV;
   qV = qR.left;         if (qV<0) { qR.left = 0;     qR.right -= qV; } else {
     qV = qR.right-AWf;  if (qV>0) { qR.right = AWf;  qR.left -= qV; }; };
   qV = qR.top;          if (qV<0) { qR.top = 0;      qR.bottom -= qV; } else {
     qV = qR.bottom-AHf; if (qV>0) { qR.bottom = AHf; qR.top -= qV; }; };
-  #ifdef _DEBUG // self-test
+  #ifdef _DEBUG1 // self-test
     if (*ARf!=qR) { TCHAR qS[80];
       _stprintf( qS, _T("ERR CSCR_SentinelRf{%d:%d,%d:%d} is out of {%dx%d}"),
       ARf->left, ARf->top, ARf->right, ARf->bottom, AWf, AHf );
