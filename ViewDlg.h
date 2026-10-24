@@ -20,7 +20,7 @@ class CViewDlg : public CDialog {
   void iCombo3StrSet( int AI, const TCHAR *APath, int AW, int AH ); // set path
   void iCombo3StrGet( int AI, TCHAR *APath, int *AW, int *AH, bool AUIStr=false ); // get path
   void iCombo3WndTxtSet( const TCHAR *APath ); // set wildcard's text
-  void iCombo3WndTxtGet( TCHAR *APath ); // get wildcard's text
+  int iCombo3WndTxtGet( TCHAR *APath ); // get wildcard's text; returns index in list-box
   void iList1Sort( int *ASel, int *AMaxLen ); // sort List1 in Windows Explorer Mode
   // ~API-internals
   CListBox   m_List1; // [files' list]

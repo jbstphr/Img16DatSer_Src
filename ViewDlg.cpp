@@ -126,7 +126,8 @@ void CViewDlg::iCombo3DimSet( int AI, int AW, int AH ) { // -- set dim
   m_Combo3.SetItemData( AI, (AW&0xFFFF)|(AH<<16) ); }
 void CViewDlg::iCombo3StrSet( int AI, const TCHAR *APath, int AW, int AH ) { // -- set path
   const TCHAR *cPath = VaUt_PathToUIStr( APath );
-  if (AI<0) AI = m_Combo3.AddString( cPath ); else m_Combo3.InsertString( AI, cPath );
+  if (AI<0) AI = m_Combo3.AddString( cPath );
+       else m_Combo3.InsertString( AI, cPath );
   iCombo3DimSet( AI, AW, AH ); }
 void CViewDlg::iCombo3StrGet( int AI, TCHAR *APath, int *AW, int *AH, bool AUIStr ) { // -- get path
   if (APath) { m_Combo3.GetLBText( AI, APath );
@@ -135,8 +136,9 @@ void CViewDlg::iCombo3StrGet( int AI, TCHAR *APath, int *AW, int *AH, bool AUISt
   *AW = qWH&0xFFFF; *AH = (qWH>>16)&0xFFFF; }
 void CViewDlg::iCombo3WndTxtSet( const TCHAR *APath ) { // -- set wildcard's text
   m_Combo3.SetWindowText( VaUt_PathToUIStr(APath) ); }
-void CViewDlg::iCombo3WndTxtGet( TCHAR *APath ) { TCHAR qS[192]; // -- get wildcard's text
-  m_Combo3.GetWindowText( qS, 192 ); VaU_TrimStr( qS ); _tcscpy( APath, VaUt_UIStrToPath(qS) ); }
+int CViewDlg::iCombo3WndTxtGet( TCHAR *APath ) { TCHAR qS[192]; // -- get wildcard's text
+  m_Combo3.GetWindowText( qS, 192 ); VaU_TrimStr( qS ); _tcscpy( APath, VaUt_UIStrToPath(qS) );
+  return m_Combo3.FindString( -1, qS ); }
 
 static int fn_qsort_Windows( const void *A1, const void *A2 ) { return StrCmpLogicalW( (const LPCWSTR)A1, (const LPCWSTR)A2 ); } 
 static int fn_qsort_Std( const void *A1, const void *A2 ) { return wcsicmp( (const LPCWSTR)A1, (const LPCWSTR)A2 ); }
@@ -260,8 +262,7 @@ void CViewDlg::jCombo3Validate() { // -- change edit by wildcard-shadow
   if (!(qCombo3Flg&0x200)) return; // if no [wildcard editor changed]
   if (theApp.m_nSizeDiff) return;
   // update [wildcard]'s list-box
-  TCHAR qS[192]; iCombo3WndTxtGet( qS );
-  int qOld = m_Combo3.FindString( -1, qS );
+  TCHAR qS[192]; int qOld = iCombo3WndTxtGet( qS ); 
   if (!qOld) { // the path is already from the item#0 
     iCombo3DimSet( 0, theA_W(), theA_H() ); return; };
   m_Combo3.SetRedraw( FALSE ); 
