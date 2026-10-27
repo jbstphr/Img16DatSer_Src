@@ -23,7 +23,7 @@ const TCHAR *cListPixTypes[cListPixTypeN] = {
   _T("signed"), _T("unsigned") };
 
 const TCHAR *cFilExts[cFilExtsN] = {
-  _T("raw"), _T("RAW"), _T("bin"), _T("BIN"), _T("img"), _T("IMG"), _T("dat"), _T("DAT") };
+  _T("bin"), _T("BIN"), _T("raw"), _T("RAW"), _T("img"), _T("IMG"), _T("dat"), _T("DAT") };
 
 /////////////////////////////////////////////////////////////////////////////
 // CViewDlg local pop-up menu
