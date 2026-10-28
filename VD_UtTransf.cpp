@@ -10,7 +10,7 @@
 //// frame=>frame transformations ////
 
 int UtTransf_Average( // -- average of selected *.raw
-  CListBox *ALB, TCHAR *APath, TCHAR *ANam, int ASelCnt, short *ASelIdxs ) {
+  CListBox *ALB, TCHAR *APath, TCHAR *ANam, int ASelCnt, short *ASelIdxs, const TCHAR *ADstNam ) {
   const int cNP = theA_W()*theA_H();
   int   *qAcc = new int[cNP]; memset( qAcc, 0, cNP*sizeof(int) );
   short *qBuf = new short[cNP];
@@ -28,9 +28,7 @@ int UtTransf_Average( // -- average of selected *.raw
     qC++; }; // for i
   if (qC>0) {
     for (int qn=0;qn<cNP;qn++) qBuf[qn] = (short)(qAcc[qn]/qC);
-    const TCHAR *cExt = _tcsrchr( ANam, _T('.') ); if (!cExt) cExt = gFilExtDef1();
-    TCHAR  qNam[32]; _stprintf( qNam, _T("_ave%.5s"), cExt ); _tcscpy( ANam, qNam );
-    FILE *qF = _tfopen( APath, _T("wb") );
+    _tcscpy( ANam, ADstNam ); FILE *qF = _tfopen( APath, _T("wb") );
     if (qF) { fwrite( qBuf, sizeof(short), cNP, qF ); fclose( qF ); }
        else { _tcscat( ANam, _T(" !!! can't write") ); WriteLn( APath ); };
   }; // if C>0

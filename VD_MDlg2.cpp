@@ -87,41 +87,6 @@ static int ixSels[] = { // recently selected items in combo-boxes
   0  // #10: [stretch H]
 };  
 
-static void iOnCombo2SelChange( CVD_MDlg2 *ADlg ) { // [operation]
-  bool cTransfEn = !ixSels[1];
-  const int cIDsTransf[] = {IDC_EDIT1,IDC_SPIN1,IDC_EDIT2,IDC_SPIN2,
-    IDC_EDIT3,IDC_SPIN3,IDC_EDIT4,IDC_SPIN4,IDC_EDIT6,IDC_SPIN6,IDC_EDIT7,IDC_SPIN7,
-    IDC_COMBO4, IDC_CHECK1, IDC_CHECK2, IDC_COMBO5, IDC_EDIT5 };
-  VaUt_EnableControls( ADlg->m_hWnd, cIDsTransf, mcASz(cIDsTransf), cTransfEn );
-  bool cOverSelShow = cTransfEn; const int cIDsOverSel[] = {IDC_COMBO5};
-  VaUt_ShowControls( ADlg->m_hWnd, cIDsOverSel, mcASz(cIDsOverSel), cOverSelShow?SW_SHOW:SW_HIDE );
-  bool cOverInfShow = ixSels[1]<3; const int cIDsOverInf[] = {IDC_EDIT5};
-  VaUt_ShowControls( ADlg->m_hWnd, cIDsOverInf, mcASz(cIDsOverInf), cOverInfShow?SW_SHOW:SW_HIDE ); }
-
-static const TCHAR
-  *cOpsAll[] = { _T("0:Frame => Image"), _T("1:Average frame"),
-    _T("2:Frame => BMP"), _T("3:Delete files"), _T("4:OS-specific 'open'") },
-  *cOpsSel[] = { _T("5:Hide unselected item<s>"), _T("6:Hide selected item<s>") };
-
-static void iOnCombo1SelChange( CVD_MDlg2 *ADlg ) { // [apply to]
-  // update the list of operations
-  CComboBox *qCB = (CComboBox*)(ADlg->GetDlgItem( IDC_COMBO2 ));
-  int qCntNew = mcASz(cOpsAll); if(!ixSels[0]) qCntNew += mcASz(cOpsSel);
-  int qCntOld = qCB->GetCount(); if (qCntOld==qCntNew) return;
-  qCB->SetRedraw( FALSE );
-  if (qCntNew<qCntOld) {
-    for (int qi=qCntOld-1;qi>=qCntNew;qi--) qCB->DeleteString( qi );
-    if (ixSels[1]>=qCntNew) { ixSels[1] = 0; qCB->SetCurSel( 0 ); iOnCombo2SelChange( ADlg ); };
-  } else {
-    for (int qi=0;qi<mcASz(cOpsSel);qi++) qCB->AddString( cOpsSel[qi] );
-    qCB->SetCurSel( ixSels[1] );
-  };
-  qCB->SetRedraw( TRUE ); qCB->Invalidate(); qCB->UpdateWindow(); }
-
-static void iOnCombo5SelChange( CVD_MDlg2 *ADlg ) { // [overwrite]
-  bool cOverwrite = ixSels[8]>0;
-  ADlg->SendDlgItemMessage( IDC_EDIT5, EM_SETREADONLY, (WPARAM)cOverwrite, 0 ); }
-
 static void itUtTransf( CVD_MDlg2 *ADlg, tUtTransf *ARec ) { // get 'tUtTransf'
   memset( ARec, 0, sizeof(tUtTransf) );
   ARec->rLft = ixSels[3]; ARec->rTop = ixSels[2];
@@ -140,6 +105,49 @@ static void iOnTransformChange( CVD_MDlg2 *ADlg ) { // a transform_control chang
   if (qW==qH) _stprintf( qS, _T("x%04d"), qW );
          else _stprintf( qS, _T("x%04dx%04d"), qW, qH );
   ADlg->SetDlgItemText( IDC_EDIT5, qS ); }
+
+static void iIDsOverInfCtl( CVD_MDlg2 *ADlg ) { // set ~"edit-box overwrite"
+  TCHAR qS[40]; bool qShow, qEnable; switch (ixSels[1]) {
+    case  0: { qShow = true; qEnable = !ixSels[8]; iOnTransformChange( ADlg ); }; break; // Frame => Image
+    case  1: { qShow = true; qEnable = true;  _stprintf( qS, _T("_ave.%s"), gFilExtDef() ); // Average frame
+      ADlg->SetDlgItemText( IDC_EDIT5, qS ); }; break;
+    case  2: { qShow = true; qEnable = false; iOnTransformChange( ADlg ); }; break; // Frame => BMP
+    default: qShow = qEnable = false; }
+  const int cIDsOverInf[] = {IDC_EDIT5}; // edit-box "subdirWxH" or "_ave.ext"
+  VaUt_ShowControls( ADlg->m_hWnd, cIDsOverInf, mcASz(cIDsOverInf), qShow?SW_SHOW:SW_HIDE );
+  VaUt_EnableControls( ADlg->m_hWnd, cIDsOverInf, mcASz(cIDsOverInf), qEnable ); }
+
+static void iOnCombo2SelChange( CVD_MDlg2 *ADlg ) { // [operation]
+  bool cTransfEn = !ixSels[1];
+  const int cIDsTransf[] = {IDC_EDIT1,IDC_SPIN1,IDC_EDIT2,IDC_SPIN2,
+    IDC_EDIT3,IDC_SPIN3,IDC_EDIT4,IDC_SPIN4,IDC_EDIT6,IDC_SPIN6,IDC_EDIT7,IDC_SPIN7,
+    IDC_COMBO4, IDC_CHECK1, IDC_CHECK2, IDC_COMBO5 };
+  VaUt_EnableControls( ADlg->m_hWnd, cIDsTransf, mcASz(cIDsTransf), cTransfEn );
+  bool cOverSelShow = cTransfEn; const int cIDsOverSel[] = {IDC_COMBO5};
+  VaUt_ShowControls( ADlg->m_hWnd, cIDsOverSel, mcASz(cIDsOverSel), cOverSelShow?SW_SHOW:SW_HIDE );
+  iIDsOverInfCtl( ADlg ); }
+
+static const TCHAR
+  *cOpsAll[] = { _T("0:Frame => Image"), _T("1:Average frame"),
+    _T("2:Frame => BMP"), _T("3:Delete image_file<s>"), _T("4:OS-specific 'open'") },
+  *cOpsSel[] = { _T("5:Hide unselected item<s>"), _T("6:Hide selected item<s>") };
+
+static void iOnCombo1SelChange( CVD_MDlg2 *ADlg ) { // [apply to]
+  // update the list of operations
+  CComboBox *qCB = (CComboBox*)(ADlg->GetDlgItem( IDC_COMBO2 ));
+  int qCntNew = mcASz(cOpsAll); if(!ixSels[0]) qCntNew += mcASz(cOpsSel);
+  int qCntOld = qCB->GetCount(); if (qCntOld==qCntNew) return;
+  qCB->SetRedraw( FALSE );
+  if (qCntNew<qCntOld) {
+    for (int qi=qCntOld-1;qi>=qCntNew;qi--) qCB->DeleteString( qi );
+    if (ixSels[1]>=qCntNew) { ixSels[1] = 0; qCB->SetCurSel( 0 ); iOnCombo2SelChange( ADlg ); };
+  } else {
+    for (int qi=0;qi<mcASz(cOpsSel);qi++) qCB->AddString( cOpsSel[qi] );
+    qCB->SetCurSel( ixSels[1] );
+  };
+  qCB->SetRedraw( TRUE ); qCB->Invalidate(); qCB->UpdateWindow(); }
+
+static void iOnCombo5SelChange( CVD_MDlg2 *ADlg ) { iIDsOverInfCtl( ADlg ); } // [overwrite]
 
 // CVD_MDlg2 message handlers
 
@@ -174,8 +182,8 @@ BOOL CVD_MDlg2::OnInitDialog() {
   // selchange
   iOnCombo1SelChange( this );
   iOnCombo2SelChange( this );
-  iOnCombo5SelChange( this ); 
-  iOnTransformChange( this );
+  iOnCombo5SelChange( this );
+  iIDsOverInfCtl( this );
   m_bInitialized = true;
   return TRUE; } // return TRUE unless you set the focus to a control
 
@@ -208,8 +216,10 @@ BOOL CVD_MDlg2::OnCommand( WPARAM wParam, LPARAM lParam ) {
       short qSelIdxs[128];
       int qCnt = iGetSels( ixSels[0], qSelIdxs ), qC = 0;
       switch (ixSels[1]) {
-        case 1: // [average]; returns #accumulated
-          qC = UtTransf_Average( m_LB, qS, qNam, qCnt, qSelIdxs ); break;
+        case 1: { TCHAR qDstNam[40]; // [average]; returns #accumulated
+          GetDlgItemText( IDC_EDIT5, qDstNam, mcASz(qDstNam)-1 ); 
+          if (!VaU_TrimStr( qDstNam )) _stprintf( qDstNam, _T("_ave.%s"), gFilExtDef() );
+          qC = UtTransf_Average( m_LB, qS, qNam, qCnt, qSelIdxs, qDstNam ); }; break;
         case 2: // [to BMP]; returns '#transformed_shl_1 or ModifFlag'
           qC = UtTransf_ToBMP( m_LB, qS, qNam, qCnt, qSelIdxs ); break;
         case 3: { // [delete]
@@ -225,10 +235,12 @@ BOOL CVD_MDlg2::OnCommand( WPARAM wParam, LPARAM lParam ) {
         case 5: case 6: { m_bModifFile = false; // [hide unselected,selected] 
           // the caller anyway will invoke LB^SetRedraw(false)+LB^SetRedraw(true)
           m_LB->SetRedraw( FALSE ); // so here we prevent immediate redraw
-          int qGetSelToHide = ixSels[1]-5, cCnt = m_LB->GetCount();
-          if (qCnt<cCnt) { for (int qi=cCnt-1;qi>=0;qi--)
-            if (m_LB->GetSel(qi)==qGetSelToHide) m_LB->DeleteString( qi );
-            qC = qCnt; }; // suppress diagnostic message about count
+          int qGetSelToHide = ixSels[1]-5, cCnt = m_LB->GetCount(); if (qCnt>=cCnt) break;
+          int qHidden1st = -1;
+          for (int qi=cCnt-1;qi>=0;qi--) if (m_LB->GetSel(qi)==qGetSelToHide) {
+            m_LB->DeleteString( qi ); if (qHidden1st<0) qHidden1st = qi; };
+          m_LB->SetCurSel( __max(qHidden1st-1,0) );
+          qC = qCnt; // suppress diagnostic message about count
         }; break;
         default: { // [transform]; returns #transformed 
           tUtTransf qRec; itUtTransf( this, &qRec );

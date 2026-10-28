@@ -11,7 +11,7 @@
   
 //// frame=>frame transformations ////
 int UtTransf_Average( // average of selected *.raw
-  CListBox *ALB, TCHAR *APath, TCHAR *ANam, int ASelCnt, short *ASelIdxs );
+  CListBox *ALB, TCHAR *APath, TCHAR *ANam, int ASelCnt, short *ASelIdxs, const TCHAR *ADstNam );
   // returns #accumulated
   
 int UtTransf_ToBMP( // convert selected *.raw to *.bmp
